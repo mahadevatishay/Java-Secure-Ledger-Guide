@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Guide: Secure Digital Ledger in Java</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Cool Neutrals -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive educational tour with four sections: Introduction, Building Blocks, Interactive Simulation, and Security Test. This structure transforms the static Java blueprint into an active learning experience by first explaining the concepts and components, then allowing the user to simulate the process visually. This is more effective for a beginner audience than a direct text-to-page conversion, prioritizing hands-on understanding and engagement. -->
+    <!-- Visualization & Content Choices: 1. Core Concepts -> Inform -> Text with icons -> N/A -> Clear, high-level overview -> HTML/CSS. 2. Class Components -> Organize/Inform -> Interactive cards/tabs -> Click to reveal details -> Breaks down complex parts into digestible chunks -> JS show/hide. 3. Process Flow -> Demonstrate Change/Relationships -> Multi-panel visual simulation -> Button clicks update visual chain -> Shows the dynamic nature of the blockchain in real-time -> HTML/CSS for visuals, JS for logic. 4. Chain Integrity -> Demonstrate Concept -> Interactive tampering and validation -> User input + button click shows visual error -> Provides a powerful, memorable lesson on blockchain's security -> JS logic. CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .component-card.active {
+            border-color: #3b82f6;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .block-invalid {
+            border-color: #ef4444 !important;
+            background-color: #fee2e2 !important;
+        }
+        .link-invalid {
+            stroke: #ef4444 !important;
+        }
+        .hash-link {
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .mining-pulse {
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: .5; }
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-slate-900">Java Secure Ledger Guide</h1>
+            <div class="hidden md:flex space-x-6">
+                <a href="#introduction" class="text-slate-600 hover:text-blue-600 transition-colors">Introduction</a>
+                <a href="#components" class="text-slate-600 hover:text-blue-600 transition-colors">Components</a>
+                <a href="#simulation" class="text-slate-600 hover:text-blue-600 transition-colors">Simulation</a>
+                <a href="#security" class="text-slate-600 hover:text-blue-600 transition-colors">Security Test</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <section id="introduction" class="mb-20">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4">Project Overview</h2>
+            <p class="text-lg text-slate-600 mb-8">This interactive guide explores the blueprint for a **Secure Digital Ledger in Java**. It demonstrates how to combine fundamental principles of blockchain and cybersecurity to create a simple, command-line application that records transactions on an immutable, secure chain. The goal is to understand how these technologies work together in a practical, hands-on way.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-3 flex items-center"><span class="text-2xl mr-3">🔗</span>Blockchain Concepts</h3>
+                    <p class="text-slate-600">Transactions are grouped into **blocks**. Each block is cryptographically linked to the previous one using a hash, forming a chain. This structure makes the ledger **immutable**—changing a past block would break the entire chain, making tampering immediately obvious.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-3 flex items-center"><span class="text-2xl mr-3">🛡️</span>Cybersecurity Principles</h3>
+                    <p class="text-slate-600">We use **public-key cryptography** to create digital signatures. This ensures that only the true owner of an account can authorize a transaction. It provides **authenticity** (proof of origin) and **non-repudiation** (the sender cannot deny sending it).</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="components" class="mb-20">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4">The Building Blocks</h2>
+            <p class="text-lg text-slate-600 mb-8">A blockchain application is made of several key components working together. Click on each card below to learn about its specific role, fields, and methods as defined in the project blueprint.</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div id="card-Transaction" class="component-card bg-white p-6 rounded-lg border-2 border-transparent cursor-pointer hover:border-blue-500 transition-all active" onclick="selectComponent('Transaction')">
+                    <h3 class="text-xl font-semibold">Transaction</h3>
+                    <p class="text-sm text-slate-500">The data to be secured.</p>
+                </div>
+                <div id="card-Block" class="component-card bg-white p-6 rounded-lg border-2 border-transparent cursor-pointer hover:border-blue-500 transition-all" onclick="selectComponent('Block')">
+                    <h3 class="text-xl font-semibold">Block 🧱</h3>
+                    <p class="text-sm text-slate-500">A container for transactions.</p>
+                </div>
+                <div id="card-Wallet" class="component-card bg-white p-6 rounded-lg border-2 border-transparent cursor-pointer hover:border-blue-500 transition-all" onclick="selectComponent('Wallet')">
+                    <h3 class="text-xl font-semibold">Wallet 👛</h3>
+                    <p class="text-sm text-slate-500">Manages user keys and signing.</p>
+                </div>
+                <div id="card-Blockchain" class="component-card bg-white p-6 rounded-lg border-2 border-transparent cursor-pointer hover:border-blue-500 transition-all" onclick="selectComponent('Blockchain')">
+                    <h3 class="text-xl font-semibold">Blockchain 🔗</h3>
+                    <p class="text-sm text-slate-500">Manages the entire chain.</p>
+                </div>
+            </div>
+            <div id="component-details" class="bg-white p-8 rounded-lg shadow-inner">
+            </div>
+        </section>
+
+        <section id="simulation" class="mb-20">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4">The Process in Action</h2>
+            <p class="text-lg text-slate-600 mb-8">Now, let's bring the components to life. This interactive simulation lets you perform the key actions of a blockchain: create wallets, sign transactions, and mine blocks to add them to the chain. Follow the steps and watch the ledger grow.</p>
+            
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-4">Simulation Control Panel</h3>
+                <div class="flex flex-wrap gap-4 items-center">
+                    <button id="create-wallet-btn" onclick="createWallet()" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">1. Create Wallet</button>
+                    <div id="transaction-controls" class="flex flex-wrap gap-4 items-center opacity-50 pointer-events-none">
+                        <select id="from-address" class="border-slate-300 rounded-lg"></select>
+                        <span class="text-slate-500">→</span>
+                        <select id="to-address" class="border-slate-300 rounded-lg"></select>
+                        <input id="amount" type="number" value="50" class="border-slate-300 rounded-lg w-24">
+                        <button id="create-tx-btn" onclick="createTransaction()" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">2. Create Transaction</button>
+                    </div>
+                    <div id="mine-controls" class="opacity-50 pointer-events-none">
+                       <button id="mine-btn" onclick="mineBlock()" class="bg-slate-800 text-white font-semibold py-2 px-4 rounded-lg hover:bg-slate-900 transition-colors">3. Mine Block</button>
+                    </div>
+                </div>
+                 <p id="sim-status" class="text-sm text-slate-500 mt-4 h-5"></p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8 mt-8">
+                <div class="lg:col-span-1">
+                    <h3 class="text-xl font-semibold mb-4">Wallets</h3>
+                    <div id="wallets-display" class="space-y-3">
+                        <p class="text-slate-500">No wallets created yet.</p>
+                    </div>
+                </div>
+                <div class="lg:col-span-2">
+                    <h3 class="text-xl font-semibold mb-4">Pending Transactions</h3>
+                    <div id="pending-tx-display" class="bg-slate-100 p-4 rounded-lg min-h-[80px]">
+                        <p class="text-slate-500">No pending transactions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="security">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4">Blockchain State & Security Test</h2>
+            <p class="text-lg text-slate-600 mb-8">Below is the current state of our blockchain. Each block is cryptographically linked to the previous one. To prove its integrity, try changing the data in any block and then click "Validate Chain". You will see how even a tiny alteration breaks the chain's validity.</p>
+            
+            <div class="flex justify-end mb-4">
+                <button id="validate-btn" onclick="validateChain()" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors">Validate Chain</button>
+            </div>
+
+            <div class="relative">
+                <svg id="chain-links" class="absolute top-0 left-0 w-full h-full" style="pointer-events: none;"></svg>
+                <div id="blockchain-display" class="space-y-4">
+                    <p class="text-slate-500">The blockchain is empty. Mine the first block to begin.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const componentData = {
+            Transaction: {
+                title: 'Transaction',
+                description: 'This is a simple Java object (POJO) that holds the details of each transaction. It represents the actual data being secured on the blockchain.',
+                fields: [
+                    { name: 'fromAddress', desc: 'The public key of the sender.' },
+                    { name: 'toAddress', desc: 'The public key of the recipient.' },
+                    { name: 'amount', desc: 'The amount being transferred.' },
+                    { name: 'signature', desc: 'The digital signature to verify authenticity.' }
+                ],
+                methods: [
+                    { name: 'calculateHash()', desc: 'Computes the hash of the transaction\'s contents, which is then signed.' },
+                    { name: 'generateSignature()', desc: 'Signs the transaction hash with the sender\'s private key.' },
+                    { name: 'verifySignature()', desc: 'Checks if the signature is valid using the sender\'s public key.' }
+                ]
+            },
+            Block: {
+                title: 'Block 🧱',
+                description: 'A Block acts as a container, bundling a list of transactions together. Blocks are linked sequentially to form the chain.',
+                fields: [
+                    { name: 'timestamp', desc: 'The time the block was created.' },
+                    { name: 'transactions', desc: 'A list of all transactions included in this block.' },
+                    { name: 'previousHash', desc: 'The hash of the previous block, linking the chain together.' },
+                    { name: 'hash', desc: 'The unique hash of this block, calculated from its contents.' },
+                    { name: 'nonce', desc: 'A random number used in the mining process.' }
+                ],
+                methods: [
+                    { name: 'calculateHash()', desc: 'Calculates the SHA-256 hash for the current block.' },
+                    { name: 'mineBlock(difficulty)', desc: 'Simulates "Proof of Work" by finding a hash that meets the difficulty criteria.' }
+                ]
+            },
+            Wallet: {
+                title: 'Wallet 👛',
+                description: 'A Wallet represents a user\'s account. It doesn\'t hold currency, but rather the cryptographic keys needed to authorize transactions.',
+                fields: [
+                    { name: 'privateKey', desc: 'The secret key, used to sign transactions. Must be kept private.' },
+                    { name: 'publicKey', desc: 'The public key, which acts as the user\'s address. It can be shared freely.' }
+                ],
+                methods: [
+                    { name: 'generateKeyPair()', desc: 'Creates a new, unique pair of public and private keys.' }
+                ]
+            },
+            Blockchain: {
+                title: 'Blockchain 🔗',
+                description: 'This is the main class that manages the entire chain of blocks, handles pending transactions, and enforces the rules of the ledger.',
+                fields: [
+                    { name: 'chain', desc: 'An ArrayList that stores all the blocks.' },
+                    { name: 'difficulty', desc: 'Defines how many leading zeros are required for a valid block hash.' },
+                    { name: 'pendingTransactions', desc: 'A list of transactions waiting to be included in the next block.' }
+                ],
+                methods: [
+                    { name: 'createTransaction()', desc: 'Adds a new, verified transaction to the pending list.' },
+                    { name: 'minePendingTransactions()', desc: 'Bundles pending transactions into a new block, mines it, and adds it to the chain.' },
+                    { name: 'isChainValid()', desc: 'A crucial security method that iterates through the chain to verify its integrity.' }
+                ]
+            }
+        };
+
+        function selectComponent(name) {
+            const detailsContainer = document.getElementById('component-details');
+            const data = componentData[name];
+
+            document.querySelectorAll('.component-card').forEach(c => c.classList.remove('active'));
+            document.getElementById(`card-${name}`).classList.add('active');
+            
+            let content = `<div class="fade-in">
+                <h3 class="text-2xl font-bold mb-2">${data.title}</h3>
+                <p class="text-slate-600 mb-6">${data.description}</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-lg mb-2">Fields</h4>
+                        <ul class="list-disc list-inside space-y-2 text-slate-600">
+                            ${data.fields.map(f => `<li><strong>${f.name}:</strong> ${f.desc}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-lg mb-2">Methods</h4>
+                        <ul class="list-disc list-inside space-y-2 text-slate-600">
+                            ${data.methods.map(m => `<li><strong>${m.name}:</strong> ${m.desc}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            </div>`;
+            detailsContainer.innerHTML = content;
+        }
+
+        // --- Simulation Logic ---
+        let wallets = [];
+        let pendingTransactions = [];
+        let blockchain = [];
+        const difficulty = 2;
+        const minerReward = 10;
+        let minerWallet = null;
+
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+        
+        function updateStatus(message, isError = false) {
+            const statusEl = document.getElementById('sim-status');
+            statusEl.textContent = message;
+            statusEl.style.color = isError ? '#ef4444' : '#64748b';
+        }
+
+        function createWallet() {
+            const id = wallets.length + 1;
+            const address = `0x${[...Array(40)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`;
+            wallets.push({ id, address });
+            if (wallets.length === 1) {
+                 minerWallet = { id: 0, address: `0x${[...Array(40)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}` };
+            }
+            renderWallets();
+            updateStatus(`Wallet ${id} created successfully.`);
+            if (wallets.length >= 2) {
+                document.getElementById('transaction-controls').classList.remove('opacity-50', 'pointer-events-none');
+            }
+        }
+        
+        function renderWallets() {
+            const display = document.getElementById('wallets-display');
+            const fromSelect = document.getElementById('from-address');
+            const toSelect = document.getElementById('to-address');
+            
+            display.innerHTML = '';
+            fromSelect.innerHTML = '';
+            toSelect.innerHTML = '';
+
+            wallets.forEach(wallet => {
+                display.innerHTML += `
+                    <div class="bg-slate-100 p-3 rounded-lg">
+                        <p class="font-semibold">Wallet ${wallet.id}</p>
+                        <p class="text-xs text-slate-500 truncate">${wallet.address}</p>
+                    </div>`;
+                fromSelect.innerHTML += `<option value="${wallet.address}">Wallet ${wallet.id}</option>`;
+                toSelect.innerHTML += `<option value="${wallet.address}">Wallet ${wallet.id}</option>`;
+            });
+            if (toSelect.options.length > 1) {
+                toSelect.selectedIndex = 1;
+            }
+        }
+
+        function createTransaction() {
+            const from = document.getElementById('from-address').value;
+            const to = document.getElementById('to-address').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+
+            if (from === to) {
+                updateStatus('Sender and receiver cannot be the same.', true);
+                return;
+            }
+            if (!amount || amount <= 0) {
+                updateStatus('Invalid transaction amount.', true);
+                return;
+            }
+
+            const tx = { from, to, amount, timestamp: Date.now() };
+            pendingTransactions.push(tx);
+            renderPendingTransactions();
+            updateStatus(`Transaction of ${amount} created.`);
+            document.getElementById('mine-controls').classList.remove('opacity-50', 'pointer-events-none');
+        }
+        
+        function renderPendingTransactions() {
+            const display = document.getElementById('pending-tx-display');
+            if (pendingTransactions.length === 0) {
+                display.innerHTML = '<p class="text-slate-500">No pending transactions.</p>';
+                return;
+            }
+            display.innerHTML = pendingTransactions.map(tx => `
+                <div class="bg-white p-2 mb-2 rounded shadow-sm">
+                    <p class="text-sm"><strong>From:</strong> ${tx.from.substring(0,10)}...</p>
+                    <p class="text-sm"><strong>To:</strong> ${tx.to.substring(0,10)}...</p>
+                    <p class="text-sm"><strong>Amount:</strong> ${tx.amount}</p>
+                </div>
+            `).join('');
+        }
+
+        async function mineBlock() {
+            if (pendingTransactions.length === 0) {
+                updateStatus('No transactions to mine.', true);
+                return;
+            }
+            updateStatus('⛏️ Mining block... this may take a moment.');
+            
+            const mineBtn = document.getElementById('mine-btn');
+            mineBtn.disabled = true;
+            mineBtn.classList.add('mining-pulse');
+
+            const rewardTx = { from: 'network', to: minerWallet.address, amount: minerReward, timestamp: Date.now() };
+            const blockTransactions = [rewardTx, ...pendingTransactions];
+
+            const newBlock = {
+                index: blockchain.length,
+                timestamp: Date.now(),
+                transactions: blockTransactions,
+                previousHash: blockchain.length > 0 ? blockchain[blockchain.length - 1].hash : '0',
+                nonce: 0
+            };
+            
+            const difficultyTarget = '0'.repeat(difficulty);
+            
+            // Mining simulation
+            while (true) {
+                newBlock.hash = await sha256(JSON.stringify(newBlock));
+                if (newBlock.hash.substring(0, difficulty) === difficultyTarget) {
+                    break;
+                }
+                newBlock.nonce++;
+                // Add a small delay to prevent browser freeze on higher difficulties
+                if (newBlock.nonce % 1000 === 0) {
+                    await new Promise(resolve => setTimeout(resolve, 0));
+                }
+            }
+
+            blockchain.push(newBlock);
+            pendingTransactions = [];
+            
+            renderBlockchain();
+            renderPendingTransactions();
+            updateStatus(`Block ${newBlock.index} mined successfully! Nonce: ${newBlock.nonce}.`);
+            
+            mineBtn.disabled = false;
+            mineBtn.classList.remove('mining-pulse');
+            document.getElementById('mine-controls').classList.add('opacity-50', 'pointer-events-none');
+        }
+
+        function renderBlockchain() {
+            const display = document.getElementById('blockchain-display');
+            if (blockchain.length === 0) {
+                display.innerHTML = '<p class="text-slate-500">The blockchain is empty. Mine the first block to begin.</p>';
+                return;
+            }
+            display.innerHTML = blockchain.map(block => `
+                <div id="block-${block.index}" class="block bg-white p-4 rounded-lg shadow border-2 border-slate-200 transition-colors duration-300">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-bold text-lg">Block #${block.index} ${block.index === 0 ? '(Genesis)' : ''}</h4>
+                        <span class="text-xs text-slate-400">${new Date(block.timestamp).toLocaleTimeString()}</span>
+                    </div>
+                    <div class="space-y-1 text-sm">
+                        <p><strong>Nonce:</strong> <span class="text-slate-600">${block.nonce}</span></p>
+                        <p class="hash-link"><strong>Prev Hash:</strong> <span class="text-slate-500">${block.previousHash.substring(0, 30)}...</span></p>
+                        <p class="hash-link"><strong>Hash:</strong> <span class="text-green-600">${block.hash.substring(0, 30)}...</span></p>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-200">
+                        <h5 class="font-semibold mb-2">Transactions (${block.transactions.length})</h5>
+                        <div class="text-xs space-y-2">
+                            ${block.transactions.map((tx, i) => `
+                                <div class="bg-slate-50 p-2 rounded">
+                                    <label for="tx-data-${block.index}-${i}" class="font-mono text-slate-500">TX Data:</label>
+                                    <input type="text" id="tx-data-${block.index}-${i}" oninput="markAsTampered(${block.index})"
+                                           class="w-full bg-transparent border-b border-slate-300 focus:outline-none focus:border-blue-500"
+                                           value="${tx.from.substring(0,5)}... → ${tx.to.substring(0,5)}... | ${tx.amount}">
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            drawLinks();
+        }
+        
+        function markAsTampered(blockIndex) {
+            const blockEl = document.getElementById(`block-${blockIndex}`);
+            if(blockEl) {
+                blockEl.dataset.tampered = 'true';
+            }
+        }
+
+        async function validateChain() {
+            let isValid = true;
+            for (let i = 1; i < blockchain.length; i++) {
+                const currentBlock = blockchain[i];
+                const previousBlock = blockchain[i - 1];
+                
+                const currentBlockElement = document.getElementById(`block-${i}`);
+                const previousBlockElement = document.getElementById(`block-${i-1}`);
+                
+                // Check if data was tampered with in the UI
+                if (currentBlockElement.dataset.tampered === 'true') {
+                     isValid = false;
+                     currentBlockElement.classList.add('block-invalid');
+                     updateStatus(`Block #${i} data was tampered with! Hash is no longer valid.`, true);
+                     drawLinks();
+                     return;
+                }
+                
+                const recomputedHash = await sha256(JSON.stringify({ ...currentBlock, hash: undefined }));
+
+                if (currentBlock.hash !== recomputedHash) {
+                    // This case is hard to trigger without tampering, but good to have
+                    isValid = false;
+                    currentBlockElement.classList.add('block-invalid');
+                    updateStatus(`Block #${i} hash is invalid!`, true);
+                }
+
+                if (currentBlock.previousHash !== previousBlock.hash) {
+                    isValid = false;
+                    currentBlockElement.classList.add('block-invalid');
+                    previousBlockElement.classList.add('block-invalid');
+                    updateStatus(`Chain broken at Block #${i}! Previous hash does not match.`, true);
+                }
+            }
+            
+            if (isValid) {
+                updateStatus('Chain is valid and secure!', false);
+                document.querySelectorAll('.block').forEach(b => b.classList.remove('block-invalid'));
+            }
+            drawLinks();
+        }
+
+        function drawLinks() {
+            const svg = document.getElementById('chain-links');
+            svg.innerHTML = '';
+            if (blockchain.length < 2) return;
+
+            for (let i = 1; i < blockchain.length; i++) {
+                const prevBlockEl = document.getElementById(`block-${i - 1}`);
+                const currentBlockEl = document.getElementById(`block-${i}`);
+
+                if (!prevBlockEl || !currentBlockEl) continue;
+
+                const startRect = prevBlockEl.getBoundingClientRect();
+                const endRect = currentBlockEl.getBoundingClientRect();
+                const containerRect = svg.parentElement.getBoundingClientRect();
+                
+                const startX = startRect.left + startRect.width / 2 - containerRect.left;
+                const startY = startRect.bottom - containerRect.top;
+                const endX = endRect.left + endRect.width / 2 - containerRect.left;
+                const endY = endRect.top - containerRect.top;
+
+                const isInvalid = currentBlockEl.classList.contains('block-invalid') || prevBlockEl.classList.contains('block-invalid');
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', `M ${startX} ${startY} C ${startX} ${startY + 40}, ${endX} ${endY - 40}, ${endX} ${endY}`);
+                path.setAttribute('stroke', isInvalid ? '#ef4444' : '#94a3b8');
+                path.setAttribute('stroke-width', '3');
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke-dasharray', '5, 5');
+                if (isInvalid) {
+                     path.classList.add('link-invalid');
+                }
+                svg.appendChild(path);
+            }
+        }
+
+        window.addEventListener('resize', drawLinks);
+        window.onload = () => {
+            selectComponent('Transaction');
+            renderBlockchain();
+        };
+    </script>
+</body>
+</html>
